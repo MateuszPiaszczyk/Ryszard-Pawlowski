@@ -1,51 +1,57 @@
-name: Build & Deploy (FTP)
-
-# Buduje stronę Astro w CI i wdraża zawartość dist/ na klasyczny hosting przez FTPS.
-# Wykonawca: Piaszczyk Studio (https://piaszczykstudio.pl/)
+name: Deploy Astro to GitHub Pages
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch: {}
+    branches: [ main ]
 
-# Blokuje równoległe wdrożenia — nowy push anuluje trwający deploy,
-# aby uniknąć wyścigu na pliku stanu synchronizacji.
+  # Umożliwia ręczne uruchomienie workflow z zakładki "Actions"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Pozwala na jednoczesne wykonywanie tylko jednego deploymentu
 concurrency:
-  group: ftp-deploy
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Node
+      
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22 # Zgodnie z Twoim środowiskiem lokalnym
           cache: 'npm'
 
       - name: Install dependencies
+        uses: thebritican/fetch-cached-dependency-action@v1 # lub standardowe npm ci
         run: npm ci
 
-      - name: Build (prebuild generuje ikony przez sharp)
+      - name: Build with Astro
         run: npm run build
+        env:
+          # Nadpisuje opcjonalnie zmienne, jeśli potrzebne
+          NODE_VERSION: 22
 
-      - name: Deploy to FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps           # FTP over TLS (jawny). Alternatywy: ftp | ftps-legacy
-          port: 21                 # FTPS jawny zwykle 21; sprawdź w panelu hostingu
-          local-dir: ./dist/       # WAŻNE: końcowy ukośnik — wysyłamy ZAWARTOŚĆ dist/, nie sam katalog
-          server-dir: /public_html/  # katalog docelowy na serwerze (dostosuj do hostingu)
-          state-name: .ftp-deploy-sync-state.json
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/.github/**
+          path: ./dist # Wskazuje na katalog wyjściowy Astro
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
