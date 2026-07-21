@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
@@ -31,7 +31,6 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        uses: thebritican/fetch-cached-dependency-action@v1 # lub standardowe npm ci
         run: npm ci
 
       - name: Build with Astro
