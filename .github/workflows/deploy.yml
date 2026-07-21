@@ -1,0 +1,51 @@
+name: Build & Deploy (FTP)
+
+# Buduje stronę Astro w CI i wdraża zawartość dist/ na klasyczny hosting przez FTPS.
+# Wykonawca: Piaszczyk Studio (https://piaszczykstudio.pl/)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+# Blokuje równoległe wdrożenia — nowy push anuluje trwający deploy,
+# aby uniknąć wyścigu na pliku stanu synchronizacji.
+concurrency:
+  group: ftp-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (prebuild generuje ikony przez sharp)
+        run: npm run build
+
+      - name: Deploy to FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps           # FTP over TLS (jawny). Alternatywy: ftp | ftps-legacy
+          port: 21                 # FTPS jawny zwykle 21; sprawdź w panelu hostingu
+          local-dir: ./dist/       # WAŻNE: końcowy ukośnik — wysyłamy ZAWARTOŚĆ dist/, nie sam katalog
+          server-dir: /public_html/  # katalog docelowy na serwerze (dostosuj do hostingu)
+          state-name: .ftp-deploy-sync-state.json
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.github/**

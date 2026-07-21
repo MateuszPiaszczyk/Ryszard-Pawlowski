@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Zasoby techniczne nie muszą być indeksowane osobno
+Disallow: /_astro/
+
+Sitemap: https://ryszardpawlowski.eu/sitemap-index.xml

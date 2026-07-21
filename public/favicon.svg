@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Ks. Ryszard Pawłowski">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#183042"/>
+      <stop offset="1" stop-color="#0f1c26"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4dca0"/>
+      <stop offset="1" stop-color="#c1922f"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="12.5" fill="none" stroke="#d9b978" stroke-opacity="0.35"/>
+  <!-- Płomień jako symbol światła i milczenia (duchowość ignacjańska) -->
+  <path d="M32 13c4.6 6.2 9.4 10.9 9.4 18.2 0 6.1-4.2 10.6-9.4 10.6s-9.4-4.5-9.4-10.6c0-3.4 1.6-6 3.7-8.6 0 2.9 1.3 4.6 3 4.6 2 0 2.9-1.8 2.4-4.6-.6-3.3-1.4-6.2 .3-9.6z" fill="url(#flame)"/>
+  <path d="M32 27.5c1.9 2.6 3.1 4.4 3.1 7 0 2.6-1.4 4.4-3.1 4.4s-3.1-1.8-3.1-4.4c0-1.6.8-3.1 1.7-4.5.1 1.3.6 2 1.4 2 .9 0 1.3-.9 1.1-2.1z" fill="#0f1c26" opacity="0.55"/>
+  <text x="32" y="55.5" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="9" letter-spacing="2" fill="#d9b978" font-weight="600">RP</text>
+</svg>

@@ -1,0 +1,54 @@
+---
+import Icon from './Icon.astro';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+interface Props {
+  items: Crumb[];
+  onDeep?: boolean;
+}
+const { items, onDeep = false } = Astro.props;
+---
+
+<nav class:list={['breadcrumbs', { 'breadcrumbs--deep': onDeep }]} aria-label="Ścieżka nawigacji">
+  <ol role="list">
+    <li>
+      <a href="/">Start</a>
+    </li>
+    {
+      items.map((item, i) => (
+        <li>
+          <Icon name="chevron-down" size="0.85em" class="breadcrumbs__sep" />
+          {item.href && i < items.length - 1 ? (
+            <a href={item.href}>{item.label}</a>
+          ) : (
+            <span aria-current="page">{item.label}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.15rem 0.35rem;
+    font-size: var(--step--2);
+    color: var(--color-text-subtle);
+  }
+  .breadcrumbs li { display: inline-flex; align-items: center; gap: 0.35rem; }
+  .breadcrumbs a { color: var(--color-text-muted); text-decoration: none; }
+  .breadcrumbs a:hover { color: var(--color-primary); text-decoration: underline; }
+  .breadcrumbs [aria-current='page'] { color: var(--color-text); font-weight: 600; }
+  .breadcrumbs__sep { transform: rotate(-90deg); opacity: 0.5; }
+  .breadcrumbs--deep,
+  .breadcrumbs--deep a,
+  .breadcrumbs--deep [aria-current='page'] { color: var(--color-on-deep-muted); }
+  .breadcrumbs--deep [aria-current='page'] { color: #fff; }
+  .breadcrumbs--deep a:hover { color: var(--gold-300); }
+</style>

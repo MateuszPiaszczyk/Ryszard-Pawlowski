@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { mainNav } from '../data/navigation';
+---
+
+<BaseLayout title="Nie znaleziono strony" description="Strona o podanym adresie nie istnieje." noindex>
+  <section class="section notfound">
+    <div class="container center flow">
+      <p class="notfound__code" aria-hidden="true">404</p>
+      <h1>Nie znaleziono strony</h1>
+      <p class="lead mx-auto" style="max-width: 46ch">
+        Strona pod tym adresem nie istnieje lub została przeniesiona. Może pomoże
+        jedno z poniższych miejsc.
+      </p>
+      <div class="cluster cluster--center" style="margin-top: var(--space-l)">
+        <a href="/" class="btn"><Icon name="arrow-right" class="btn__icon" /> Wróć na stronę główną</a>
+      </div>
+      <nav aria-label="Szybkie odnośniki" class="notfound__links">
+        <ul role="list" class="cluster cluster--center">
+          {mainNav.filter((i) => i.href !== '/').map((i) => (
+            <li><a href={i.href}>{i.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound { padding-block: var(--space-3xl); }
+  .notfound__code {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(5rem, 22vw, 12rem);
+    line-height: 0.9;
+    color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
+  .notfound__links { margin-top: var(--space-xl); }
+  .notfound__links ul { gap: var(--space-s); }
+  .notfound__links a { color: var(--color-primary-strong); text-decoration: none; font-weight: 600; }
+  .notfound__links a:hover { text-decoration: underline; }
+</style>

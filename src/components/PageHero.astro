@@ -1,0 +1,57 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  breadcrumbs?: Crumb[];
+}
+const { eyebrow, title, lead, breadcrumbs = [] } = Astro.props;
+---
+
+<section class="page-hero section--deep">
+  <div class="page-hero__glow" aria-hidden="true"></div>
+  <div class="container page-hero__inner">
+    {breadcrumbs.length > 0 && <Breadcrumbs items={breadcrumbs} onDeep />}
+    {eyebrow && <p class="eyebrow page-hero__eyebrow">{eyebrow}</p>}
+    <h1 class="page-hero__title">{title}</h1>
+    {lead && <p class="page-hero__lead"><slot name="lead">{lead}</slot></p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-deep);
+    color: var(--color-on-deep);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .page-hero__glow {
+    position: absolute;
+    inset: -30% -10% auto auto;
+    width: 55%;
+    aspect-ratio: 1;
+    background: radial-gradient(circle, color-mix(in srgb, var(--gold-500) 30%, transparent), transparent 65%);
+    pointer-events: none;
+  }
+  .page-hero__inner { position: relative; max-width: 60rem; }
+  .page-hero__eyebrow { color: var(--gold-300); margin-top: var(--space-s); }
+  .page-hero__title {
+    font-size: var(--step-5);
+    color: #fff;
+    margin-top: var(--space-2xs);
+  }
+  .page-hero__lead {
+    margin-top: var(--space-s);
+    font-size: var(--step-1);
+    color: var(--color-on-deep-muted);
+    max-width: 54ch;
+  }
+</style>

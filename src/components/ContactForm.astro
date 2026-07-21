@@ -1,0 +1,136 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+interface Props {
+  /** Domyślny temat (np. dla zapisu na rekolekcje). */
+  subject?: string;
+  compact?: boolean;
+}
+const { subject = '', compact = false } = Astro.props;
+---
+
+<form class:list={['contact-form', { 'contact-form--compact': compact }]} data-contact-form novalidate>
+  <div class="contact-form__grid">
+    <div class="field">
+      <label for="cf-name">Imię i nazwisko <span aria-hidden="true">*</span></label>
+      <input id="cf-name" name="name" type="text" required autocomplete="name" />
+    </div>
+    <div class="field">
+      <label for="cf-email">Adres e-mail <span aria-hidden="true">*</span></label>
+      <input id="cf-email" name="email" type="email" required autocomplete="email" />
+    </div>
+    <div class="field">
+      <label for="cf-phone">Telefon <span class="field__opt">(opcjonalnie)</span></label>
+      <input id="cf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" />
+    </div>
+    <div class="field">
+      <label for="cf-subject">Temat</label>
+      <input id="cf-subject" name="subject" type="text" value={subject} />
+    </div>
+    <div class="field field--full">
+      <label for="cf-message">Wiadomość <span aria-hidden="true">*</span></label>
+      <textarea id="cf-message" name="message" rows="5" required></textarea>
+    </div>
+    <div class="field field--full field--consent">
+      <input id="cf-consent" name="consent" type="checkbox" required />
+      <label for="cf-consent">
+        Wyrażam zgodę na przetwarzanie moich danych w celu udzielenia odpowiedzi na
+        wiadomość. <span aria-hidden="true">*</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="contact-form__actions">
+    <button type="submit" class="btn">
+      <Icon name="mail" class="btn__icon" /> Wyślij wiadomość
+    </button>
+    <p class="contact-form__hint"><span aria-hidden="true">*</span> pola wymagane</p>
+  </div>
+
+  <p class="contact-form__msg" data-contact-msg role="status" aria-live="polite"></p>
+
+  <p class="placeholder-note">
+    <Icon name="info" size="1em" />
+    <span>
+      Formularz demonstracyjny. Do wdrożenia produkcyjnego wystarczy podłączyć
+      usługę (np. Formspree, Web3Forms, własny endpoint) lub bramkę e-mail.
+      Przycisk poniżej działa już teraz przez program pocztowy.
+    </span>
+  </p>
+</form>
+
+<style>
+  .contact-form { display: flex; flex-direction: column; gap: var(--space-m); }
+  .contact-form__grid {
+    display: grid;
+    gap: var(--space-s) var(--space-m);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 40rem) {
+    .contact-form__grid { grid-template-columns: 1fr 1fr; }
+  }
+  .field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field--full { grid-column: 1 / -1; }
+  .field label { font-size: var(--step--1); font-weight: 600; color: var(--color-text); }
+  .field label span { color: var(--color-primary); }
+  .field__opt { font-weight: 400; color: var(--color-text-subtle); }
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 0.75em 0.9em;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-surface);
+    color: var(--color-text);
+    transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .field textarea { resize: vertical; min-height: 7rem; }
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-focus-ring);
+  }
+  .field input:user-invalid,
+  .field textarea:user-invalid { border-color: var(--danger-600); }
+
+  .field--consent {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .field--consent input { width: 1.15rem; height: 1.15rem; margin-top: 0.2rem; flex: none; accent-color: var(--color-primary); }
+  .field--consent label { font-weight: 400; color: var(--color-text-muted); font-size: var(--step--1); }
+
+  .contact-form__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    flex-wrap: wrap;
+  }
+  .contact-form__hint { font-size: var(--step--2); color: var(--color-text-subtle); }
+  .contact-form__msg { min-height: 1.2em; color: var(--success-600); font-weight: 600; }
+</style>
+
+<script define:vars={{ email: site.contact.email }}>
+  const form = document.querySelector('[data-contact-form]');
+  const msg = form?.querySelector('[data-contact-msg]');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    const data = new FormData(form);
+    const subject = encodeURIComponent(data.get('subject') || 'Wiadomość ze strony');
+    const body = encodeURIComponent(
+      `Imię i nazwisko: ${data.get('name')}\nE-mail: ${data.get('email')}\nTelefon: ${
+        data.get('phone') || '—'
+      }\n\n${data.get('message')}`,
+    );
+    if (msg) msg.textContent = 'Dziękujemy! Otwieramy Twój program pocztowy z gotową wiadomością…';
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    form.reset();
+  });
+</script>

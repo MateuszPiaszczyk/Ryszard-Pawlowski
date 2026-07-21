@@ -1,0 +1,467 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import Gallery from '../components/Gallery.astro';
+import { quotes, biblicalNumbers } from '../data/home';
+import { retreatWeeks } from '../data/retreats';
+import { site } from '../data/site';
+
+import portrait from '../assets/images/hero/rp23.jpg';
+import medytacja from '../assets/images/content/medytacja.png';
+import zakon from '../assets/images/content/3ks.jpg';
+---
+
+<BaseLayout
+  title="Rekolekcje ignacjańskie i medytacja Słowa Bożego"
+  description={site.description}
+  path="/"
+>
+  {/* ============================ HERO ============================ */}
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__text">
+        <p class="eyebrow">Towarzyszenie duchowe · Ćwiczenia Duchowe</p>
+        <h1 class="hero__title">
+          Zatrzymaj się <span class="text-gradient">w ciszy</span> i usłysz Boga
+        </h1>
+        <p class="hero__lead">
+          Rekolekcje ignacjańskie według Ćwiczeń Duchowych św. Ignacego Loyoli —
+          droga medytacji Słowa Bożego, rozeznania i głębszego spotkania z Bogiem,
+          prowadzona przez <strong>ks. Ryszarda Pawłowskiego</strong>.
+        </p>
+        <div class="hero__cta cluster">
+          <a href="/rekolekcje" class="btn">
+            Poznaj rekolekcje <Icon name="arrow-right" class="btn__icon" />
+          </a>
+          <a href="/kontakt" class="btn btn--ghost">Skontaktuj się</a>
+        </div>
+        <dl class="hero__facts">
+          <div>
+            <dt>Metoda</dt>
+            <dd>Ćwiczenia Duchowe św. Ignacego</dd>
+          </div>
+          <div>
+            <dt>Forma</dt>
+            <dd>Medytacja Słowa i cisza</dd>
+          </div>
+          <div>
+            <dt>Języki</dt>
+            <dd>PL · IT · EN</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="hero__media">
+        <div class="hero__frame">
+          <Image
+            src={portrait}
+            alt="Ks. Ryszard Pawłowski"
+            widths={[420, 640, 900]}
+            sizes="(min-width: 60rem) 38vw, (min-width: 40rem) 60vw, 90vw"
+            loading="eager"
+            fetchpriority="high"
+            class="hero__img"
+          />
+          <figure class="hero__badge">
+            <Icon name="quote" size="1.4rem" />
+            <blockquote>Ten Boga usłyszy, kto Go szuka w ciszy.</blockquote>
+            <figcaption>Adam Mickiewicz</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+    <a href="#zaproszenie" class="hero__scroll" aria-label="Przewiń do treści">
+      <Icon name="chevron-down" />
+    </a>
+  </section>
+
+  {/* ======================= ZAPROSZENIE / CYTATY ======================= */}
+  <section id="zaproszenie" class="section section--deep quotes">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <p class="eyebrow" style="color: var(--gold-300)">Słowo na drogę</p>
+        <h2>W milczeniu rodzi się słuchanie</h2>
+      </div>
+      <ul role="list" class="quotes__grid">
+        {
+          quotes.map((q) => (
+            <li class="quote-card">
+              <Icon name="quote" size="1.6rem" class="quote-card__icon" />
+              <blockquote>{q.text}</blockquote>
+              <cite>— {q.author}</cite>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {/* ======================= MODLITWA W DRODZE ======================= */}
+  <section class="section prayer">
+    <div class="container split">
+      <div class="prayer__media">
+        <Image
+          src={medytacja}
+          alt="Medytacja Słowa Bożego — modlitwa w ciszy"
+          widths={[420, 640, 832]}
+          sizes="(min-width: 52rem) 45vw, 90vw"
+          loading="lazy"
+          class="prayer__img"
+        />
+      </div>
+      <div class="prayer__text flow">
+        <p class="eyebrow">Posłuchaj Słowa Bożego</p>
+        <h2>Modlitwa w drodze</h2>
+        <p class="lead">
+          Codzienne rozważanie Słowa Bożego, które możesz zabrać ze sobą —
+          w drodze, w pracy, w chwili wytchnienia. Kilkanaście minut medytacji,
+          które porządkują dzień wokół tego, co najważniejsze.
+        </p>
+        <div class="prayer__player" role="group" aria-label="Odtwarzacz rozważania">
+          <span class="prayer__play"><Icon name="play" size="2rem" /></span>
+          <div>
+            <p class="prayer__now">Rozważanie na dziś</p>
+            <p class="prayer__meta">Medytacja ignacjańska · ok. 12 min</p>
+          </div>
+          <a class="btn btn--sm" href="https://modlitwawdrodze.pl" target="_blank" rel="noopener">
+            Otwórz <Icon name="arrow-up-right" size="0.9em" />
+          </a>
+        </div>
+        <p class="placeholder-note">
+          <Icon name="info" size="1em" />
+          <span>Miejsce na osadzenie odtwarzacza podcastu / pliku audio (np. Spotify, SoundCloud, plik MP3).</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* ======================= LICZBY BIBLIJNE ======================= */}
+  <section class="section--tight numbers section--subtle">
+    <div class="container">
+      <ul role="list" class="numbers__grid">
+        {
+          biblicalNumbers.map((n) => (
+            <li class="numbers__item">
+              <span class="numbers__value">{n.value}</span>
+              <span class="numbers__label">{n.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {/* ======================= REKOLEKCJE — 4 TYGODNIE ======================= */}
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Droga Ćwiczeń Duchowych</p>
+        <h2>Cztery tygodnie rekolekcji</h2>
+        <p class="lead">
+          Ćwiczenia Duchowe św. Ignacego prowadzą przez kolejne etapy życia
+          wewnętrznego: oczyszczenie, oświecenie i zjednoczenie.
+        </p>
+      </div>
+      <ol role="list" class="weeks">
+        {
+          retreatWeeks.map((w) => (
+            <li class="week-card">
+              <span class="week-card__roman" aria-hidden="true">{w.roman}</span>
+              <h3 class="week-card__title">{w.title}</h3>
+              <p class="week-card__summary">{w.summary}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="center" style="margin-top: var(--space-xl)">
+        <a href="/rekolekcje" class="btn">
+          Metoda i etapy rekolekcji <Icon name="arrow-right" class="btn__icon" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {/* ======================= ZAKON RYCERZY ======================= */}
+  <section class="section section--subtle">
+    <div class="container split split--media-first">
+      <div class="engagement__media">
+        <Image
+          src={zakon}
+          alt="Ks. Ryszard Pawłowski — posługa i zaangażowanie"
+          widths={[420, 640, 900]}
+          sizes="(min-width: 52rem) 45vw, 90vw"
+          loading="lazy"
+          class="engagement__img"
+        />
+      </div>
+      <div class="flow">
+        <p class="eyebrow">Jestem zaangażowany</p>
+        <h2>Zakon Rycerzy św. Jana Pawła II Wielkiego</h2>
+        <p>
+          Podstawowym zadaniem Bractwa Rycerskiego św. Jana Pawła II Wielkiego jest
+          rozwój duchowy i osobisty katolickich mężczyzn — przez naśladowanie
+          przykładu ich patrona, którego życie było wzorem połączenia męskości ze
+          świętością.
+        </p>
+        <p class="text-muted">
+          Ks. Ryszard Pawłowski od 2020 roku pełni posługę kapelana i opiekuna
+          duchowego Zakonu.
+        </p>
+        <a href="/o-mnie" class="arrow-link">Poznaj drogę kapłańską <Icon name="arrow-right" /></a>
+      </div>
+    </div>
+  </section>
+
+  {/* ======================= GALERIA (podgląd) ======================= */}
+  <section class="section">
+    <div class="container">
+      <div class="section-head cluster cluster--between" style="max-width:none">
+        <div>
+          <p class="eyebrow">Migawki</p>
+          <h2>Z posługi i pielgrzymek</h2>
+        </div>
+        <a href="/o-mnie#galeria" class="arrow-link">Zobacz pełną galerię <Icon name="arrow-right" /></a>
+      </div>
+      <Gallery limit={8} />
+    </div>
+  </section>
+
+  {/* ======================= CTA ======================= */}
+  <section class="section section--deep cta">
+    <div class="container cta__inner">
+      <div>
+        <h2>Masz pytania o rekolekcje?</h2>
+        <p>Chętnie porozmawiam i pomogę wybrać odpowiedni etap Ćwiczeń Duchowych.</p>
+      </div>
+      <div class="cluster">
+        <a href="/kontakt" class="btn">Napisz do mnie</a>
+        <a href={`tel:${site.contact.phoneHref}`} class="btn btn--on-deep">
+          <Icon name="phone" class="btn__icon" /> {site.contact.phone}
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* --------------------------------- HERO --------------------------------- */
+  .hero { position: relative; padding-block: clamp(2.5rem, 6vw, 5rem) clamp(3rem, 7vw, 6rem); }
+  .hero__inner {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+  @media (min-width: 60rem) {
+    .hero__inner { grid-template-columns: 1.05fr 0.95fr; gap: var(--space-3xl); }
+  }
+  .hero__title {
+    font-size: var(--step-6);
+    line-height: 1.02;
+    margin-top: var(--space-xs);
+  }
+  .hero__lead {
+    font-size: var(--step-1);
+    color: var(--color-text-muted);
+    max-width: 40ch;
+    margin-top: var(--space-m);
+  }
+  .hero__cta { margin-top: var(--space-l); }
+  .hero__facts {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: var(--space-m);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--color-border);
+    max-width: 34rem;
+  }
+  .hero__facts dt {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+  .hero__facts dd { font-size: var(--step--1); margin-top: 0.2rem; font-weight: 500; }
+
+  .hero__frame { position: relative; }
+  .hero__img {
+    width: 100%;
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+  }
+  .hero__frame::before {
+    content: '';
+    position: absolute;
+    inset: -0.7rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: calc(var(--radius-xl) + 0.7rem);
+    z-index: -1;
+  }
+  .hero__badge {
+    position: absolute;
+    left: clamp(-0.5rem, -2vw, -1.75rem);
+    bottom: clamp(-1rem, -3vw, -1.75rem);
+    max-width: 17rem;
+    padding: var(--space-s) var(--space-m);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    color: var(--color-primary);
+  }
+  .hero__badge blockquote {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.2;
+    color: var(--color-heading);
+    font-style: italic;
+    margin-top: 0.25rem;
+  }
+  .hero__badge figcaption { font-size: var(--step--2); color: var(--color-text-muted); margin-top: 0.35rem; font-style: normal; }
+
+  .hero__scroll {
+    display: none;
+    position: absolute;
+    left: 50%;
+    bottom: 1rem;
+    translate: -50% 0;
+    color: var(--color-text-muted);
+    animation: bob 2.4s var(--ease-in-out) infinite;
+  }
+  @media (min-width: 60rem) { .hero__scroll { display: block; } }
+  @keyframes bob { 0%,100% { translate: -50% 0; } 50% { translate: -50% 0.4rem; } }
+
+  /* -------------------------------- QUOTES -------------------------------- */
+  .quotes__grid {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 52rem) { .quotes__grid { grid-template-columns: repeat(3, 1fr); } }
+  .quote-card {
+    padding: var(--space-l);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, #fff 5%, transparent);
+    border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  .quote-card__icon { color: var(--gold-300); }
+  .quote-card blockquote {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    line-height: 1.25;
+    color: #fff;
+    font-style: italic;
+    flex: 1;
+  }
+  .quote-card cite { color: var(--color-on-deep-muted); font-style: normal; font-size: var(--step--1); }
+
+  /* -------------------------------- PRAYER -------------------------------- */
+  .prayer__img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    max-height: 30rem;
+    object-fit: cover;
+    object-position: top;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+  .prayer__player {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+    padding: var(--space-s) var(--space-m);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+  }
+  .prayer__play {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-strong);
+    flex: none;
+  }
+  .prayer__player > div { flex: 1; min-width: 8rem; }
+  .prayer__now { font-weight: 600; }
+  .prayer__meta { font-size: var(--step--2); color: var(--color-text-muted); }
+
+  /* -------------------------------- NUMBERS ------------------------------- */
+  .numbers__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-l) var(--space-m);
+    text-align: center;
+  }
+  @media (min-width: 52rem) { .numbers__grid { grid-template-columns: repeat(4, 1fr); } }
+  .numbers__item { display: flex; flex-direction: column; gap: 0.35rem; align-items: center; }
+  .numbers__value {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 8vw, 5rem);
+    line-height: 1;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+  .numbers__label { font-size: var(--step--1); color: var(--color-text-muted); max-width: 22ch; }
+
+  /* --------------------------------- WEEKS -------------------------------- */
+  .weeks {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: 1fr;
+    counter-reset: none;
+  }
+  @media (min-width: 40rem) { .weeks { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 64rem) { .weeks { grid-template-columns: repeat(4, 1fr); } }
+  .week-card {
+    position: relative;
+    padding: var(--space-l);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out);
+  }
+  .week-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .week-card__roman {
+    font-family: var(--font-serif);
+    font-size: 4rem;
+    line-height: 0.8;
+    font-weight: 700;
+    color: color-mix(in srgb, var(--color-primary) 22%, transparent);
+    display: block;
+  }
+  .week-card__title { font-size: var(--step-1); margin-top: var(--space-xs); }
+  .week-card__summary { color: var(--color-text-muted); margin-top: 0.4rem; font-size: var(--step--1); }
+
+  /* ------------------------------ ENGAGEMENT ------------------------------ */
+  .engagement__img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* ---------------------------------- CTA --------------------------------- */
+  .cta__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-l);
+    align-items: center;
+    justify-content: space-between;
+  }
+  .cta__inner h2 { color: #fff; }
+  .cta__inner p { color: var(--color-on-deep-muted); margin-top: 0.4rem; }
+</style>

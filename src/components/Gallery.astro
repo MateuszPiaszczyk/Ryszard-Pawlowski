@@ -1,0 +1,207 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+
+interface Props {
+  /** Ogranicz liczbę zdjęć (np. na stronie głównej). */
+  limit?: number;
+  altBase?: string;
+}
+const { limit, altBase = 'Ks. Ryszard Pawłowski — fotografia z posługi kapłańskiej i pielgrzymek' } =
+  Astro.props;
+
+const modules = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/images/gallery/*.{jpg,jpeg,png}',
+  { eager: true },
+);
+
+let images = Object.keys(modules)
+  .sort((a, b) => a.localeCompare(b, 'en'))
+  .map((key, i) => ({
+    src: modules[key].default,
+    alt: `${altBase} (${i + 1})`,
+  }));
+
+if (limit) images = images.slice(0, limit);
+---
+
+<div class="gallery" data-gallery>
+  <ul role="list" class="gallery__grid">
+    {
+      images.map((img, i) => (
+        <li class="gallery__item">
+          <button
+            type="button"
+            class="gallery__btn"
+            data-full={img.src.src}
+            data-alt={img.alt}
+            aria-label={`Powiększ zdjęcie ${i + 1} z ${images.length}`}
+          >
+            <Image
+              src={img.src}
+              alt={img.alt}
+              widths={[220, 440]}
+              sizes="(min-width: 62rem) 22vw, (min-width: 40rem) 30vw, 45vw"
+              loading="lazy"
+              class="gallery__img"
+            />
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+
+  <dialog class="lightbox" data-lightbox aria-label="Podgląd zdjęcia">
+    <div class="lightbox__stage">
+      <img class="lightbox__img" data-lightbox-img alt="" />
+    </div>
+    <div class="lightbox__bar">
+      <span class="lightbox__count" data-lightbox-count aria-live="polite"></span>
+      <div class="lightbox__controls">
+        <button type="button" class="lightbox__ctrl" data-lightbox-prev aria-label="Poprzednie zdjęcie">
+          <Icon name="arrow-right" class="flip" />
+        </button>
+        <button type="button" class="lightbox__ctrl" data-lightbox-next aria-label="Następne zdjęcie">
+          <Icon name="arrow-right" />
+        </button>
+        <button type="button" class="lightbox__ctrl lightbox__close" data-lightbox-close aria-label="Zamknij podgląd">
+          <Icon name="close" />
+        </button>
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<style>
+  .gallery__grid {
+    display: grid;
+    gap: clamp(0.4rem, 1vw, 0.75rem);
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 40rem) {
+    .gallery__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 62rem) {
+    .gallery__grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  .gallery__item { margin: 0; }
+  .gallery__btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-bg-subtle);
+    box-shadow: var(--shadow-xs);
+    cursor: zoom-in;
+    aspect-ratio: 4 / 3;
+  }
+  .gallery__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out), filter var(--dur) var(--ease-out);
+  }
+  .gallery__btn:hover .gallery__img { transform: scale(1.06); }
+  .gallery__btn:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 2px; }
+
+  /* --- Lightbox --- */
+  .lightbox {
+    width: min(96vw, 1100px);
+    max-width: 96vw;
+    max-height: 94dvh;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-lg);
+    background: var(--color-deep);
+    color: #fff;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+  .lightbox::backdrop {
+    background: rgba(8, 12, 16, 0.82);
+    backdrop-filter: blur(4px);
+  }
+  .lightbox[open] { animation: lb-in var(--dur) var(--ease-out); }
+  @keyframes lb-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: none; } }
+  .lightbox__stage {
+    display: grid;
+    place-items: center;
+    background: #0a0f14;
+    max-height: 82dvh;
+  }
+  .lightbox__img {
+    max-width: 100%;
+    max-height: 82dvh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  .lightbox__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding: 0.6rem 0.85rem;
+  }
+  .lightbox__count { font-size: var(--step--2); color: var(--color-on-deep-muted); }
+  .lightbox__controls { display: flex; gap: 0.35rem; }
+  .lightbox__ctrl {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-pill);
+    color: #fff;
+    background: color-mix(in srgb, #fff 8%, transparent);
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+  .lightbox__ctrl:hover { background: color-mix(in srgb, #fff 18%, transparent); }
+  .lightbox__ctrl:focus-visible { outline: 2px solid var(--gold-300); outline-offset: 2px; }
+  .lightbox :global(.flip) { transform: rotate(180deg); }
+</style>
+
+<script>
+  type Item = { full: string; alt: string };
+  const root = document.querySelector<HTMLElement>('[data-gallery]');
+  if (root) {
+    const dialog = root.querySelector<HTMLDialogElement>('[data-lightbox]')!;
+    const imgEl = root.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
+    const countEl = root.querySelector<HTMLElement>('[data-lightbox-count]')!;
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('.gallery__btn'));
+    const items: Item[] = buttons.map((b) => ({
+      full: b.dataset.full || '',
+      alt: b.dataset.alt || '',
+    }));
+    let index = 0;
+
+    const show = (i: number) => {
+      index = (i + items.length) % items.length;
+      const it = items[index];
+      imgEl.src = it.full;
+      imgEl.alt = it.alt;
+      countEl.textContent = `${index + 1} / ${items.length}`;
+    };
+    const open = (i: number) => {
+      show(i);
+      if (!dialog.open) dialog.showModal();
+    };
+
+    buttons.forEach((b, i) => b.addEventListener('click', () => open(i)));
+    root.querySelector('[data-lightbox-next]')?.addEventListener('click', () => show(index + 1));
+    root.querySelector('[data-lightbox-prev]')?.addEventListener('click', () => show(index - 1));
+    root.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close());
+
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(index + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
+    });
+    // Klik w tło zamyka
+    dialog.addEventListener('click', (e) => {
+      const r = dialog.getBoundingClientRect();
+      const inside =
+        e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+      if (!inside) dialog.close();
+    });
+  }
+</script>

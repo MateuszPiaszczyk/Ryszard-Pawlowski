@@ -1,0 +1,123 @@
+/* =========================================================================
+   NARZĘDZIA (utility classes) — kompozycyjne wzorce układu
+   ========================================================================= */
+
+/* Stos pionowy z równym rytmem (flow) */
+.flow > * + * { margin-top: var(--flow-space, 1em); }
+.flow-s { --flow-space: var(--space-s); }
+.flow-m { --flow-space: var(--space-m); }
+.flow-l { --flow-space: var(--space-l); }
+
+/* Cluster — elastyczne grupowanie w rzędzie z zawijaniem */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cluster-gap, var(--space-s));
+  align-items: var(--cluster-align, center);
+}
+.cluster--between { justify-content: space-between; }
+.cluster--center { justify-content: center; }
+
+/* Auto-grid — responsywna siatka bez media queries */
+.auto-grid {
+  display: grid;
+  gap: var(--grid-gap, var(--space-m));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(var(--grid-min, 16rem), 100%), 1fr)
+  );
+}
+
+/* Siatka 2/3/4 kolumny (zwija się na mobile) */
+.grid-2,
+.grid-3,
+.grid-4 {
+  display: grid;
+  gap: var(--grid-gap, var(--space-m));
+  grid-template-columns: 1fr;
+}
+@media (min-width: 40rem) {
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 62rem) {
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Split — treść + medium obok siebie */
+.split {
+  display: grid;
+  gap: var(--space-xl);
+  align-items: center;
+}
+@media (min-width: 52rem) {
+  .split { grid-template-columns: repeat(2, 1fr); }
+  .split--media-first > :first-child { order: 2; }
+}
+
+/* Center helper */
+.center { text-align: center; }
+.mx-auto { margin-inline: auto; }
+.measure { max-width: var(--measure); }
+.measure-narrow { max-width: var(--measure-narrow); }
+
+/* Ozdobne akcenty */
+.text-gradient {
+  background: linear-gradient(135deg, var(--gold-600), var(--gold-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.text-primary { color: var(--color-primary); }
+.text-muted { color: var(--color-text-muted); }
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-l);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Animacja wejścia (respektuje prefers-reduced-motion) */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    animation: reveal-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 22%;
+  }
+  @keyframes reveal-in {
+    to { opacity: 1; transform: none; }
+  }
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.4em 0.9em;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  font-size: var(--step--2);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* Placeholder / element do uzupełnienia przez klienta (widoczny, oznaczony) */
+.placeholder-note {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: flex-start;
+  padding: var(--space-s) var(--space-m);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--gold-100) 50%, var(--color-surface));
+  color: var(--color-text-muted);
+  font-size: var(--step--1);
+}
+.placeholder-note svg { flex: none; width: 1.25rem; height: 1.25rem; color: var(--color-primary); }

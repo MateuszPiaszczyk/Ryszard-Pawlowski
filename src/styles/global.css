@@ -1,0 +1,9 @@
+/* =========================================================================
+   GLOBAL — punkt wejścia arkuszy stylów
+   Kolejność ma znaczenie: tokeny → reset → baza → narzędzia
+   (Czcionki @fontsource importowane są w BaseLayout.astro)
+   ========================================================================= */
+@import './tokens.css';
+@import './reset.css';
+@import './base.css';
+@import './utilities.css';

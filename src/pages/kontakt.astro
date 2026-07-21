@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://ryszardpawlowski.eu/' },
+    { '@type': 'ListItem', position: 2, name: 'Kontakt', item: 'https://ryszardpawlowski.eu/kontakt' },
+  ],
+};
+
+const channels = [
+  {
+    icon: 'mail',
+    label: 'E-mail',
+    value: site.contact.email,
+    href: `mailto:${site.contact.email}`,
+  },
+  {
+    icon: 'phone',
+    label: 'Telefon',
+    value: site.contact.phone,
+    href: `tel:${site.contact.phoneHref}`,
+  },
+  {
+    icon: 'youtube',
+    label: 'YouTube',
+    value: '@SacRyszardPawlowski',
+    href: site.social.youtube,
+    external: true,
+  },
+];
+---
+
+<BaseLayout
+  title="Kontakt"
+  description="Skontaktuj się z ks. Ryszardem Pawłowskim — e-mail, telefon oraz formularz kontaktowy. Chętnie odpowiem na pytania o rekolekcje i towarzyszenie duchowe."
+  path="/kontakt"
+  jsonLd={[breadcrumbSchema]}
+>
+  <PageHero
+    eyebrow="Masz pytania?"
+    title="Kontakt"
+    lead="Skontaktuj się ze mną — jestem zawsze chętny do rozmowy. Odpowiem na pytania o rekolekcje, towarzyszenie duchowe i możliwe terminy."
+    breadcrumbs={[{ label: 'Kontakt' }]}
+  />
+
+  <section class="section">
+    <div class="container contact-layout">
+      <aside class="contact-info flow">
+        <h2 class="visually-hidden">Dane kontaktowe</h2>
+        <ul role="list" class="channels">
+          {
+            channels.map((c) => (
+              <li>
+                <a
+                  href={c.href}
+                  class="channel"
+                  target={c.external ? '_blank' : undefined}
+                  rel={c.external ? 'noopener' : undefined}
+                >
+                  <span class="channel__icon"><Icon name={c.icon} /></span>
+                  <span class="channel__text">
+                    <span class="channel__label">{c.label}</span>
+                    <span class="channel__value">{c.value}</span>
+                  </span>
+                  <Icon name={c.external ? 'arrow-up-right' : 'arrow-right'} size="1em" class="channel__arrow" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="contact-note card">
+          <Icon name="location" size="1.4rem" />
+          <div>
+            <p class="contact-note__title">Sanktuarium św. Antoniego Padewskiego</p>
+            <p class="text-muted">Ostrołęka — miejsce obecnej posługi.</p>
+          </div>
+        </div>
+      </aside>
+
+      <div class="contact-form-wrap">
+        <div class="section-head" style="margin-bottom: var(--space-l)">
+          <p class="eyebrow">Napisz wiadomość</p>
+          <h2>Formularz kontaktowy</h2>
+        </div>
+        <ContactForm subject="Zapytanie ze strony — kontakt" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-layout {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: start;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 60rem) {
+    .contact-layout { grid-template-columns: 0.85fr 1.15fr; gap: var(--space-3xl); }
+  }
+  .channels { display: flex; flex-direction: column; gap: var(--space-s); }
+  .channel {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    padding: var(--space-s) var(--space-m);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    text-decoration: none;
+    color: var(--color-text);
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out);
+  }
+  .channel:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
+  }
+  .channel__icon {
+    display: grid; place-items: center;
+    width: 3rem; height: 3rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-strong);
+    flex: none;
+  }
+  .channel__text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+  .channel__label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--color-text-subtle); }
+  .channel__value { font-weight: 600; overflow-wrap: anywhere; }
+  .channel__arrow { color: var(--color-primary); flex: none; }
+
+  .contact-note {
+    display: flex;
+    gap: var(--space-s);
+    align-items: flex-start;
+    background: var(--color-surface-2);
+  }
+  .contact-note svg { color: var(--color-primary); flex: none; margin-top: 0.15rem; }
+  .contact-note__title { font-weight: 600; }
+</style>

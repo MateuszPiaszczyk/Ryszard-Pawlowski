@@ -1,0 +1,145 @@
+---
+// Czcionki self-hosted (bez zewnętrznych zapytań — zgodność z RODO, szybkość).
+import '@fontsource/cormorant-garamond/500.css';
+import '@fontsource/cormorant-garamond/600.css';
+import '@fontsource/cormorant-garamond/700.css';
+import '@fontsource-variable/inter';
+
+import '../styles/global.css';
+import Seo from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  path?: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
+  bareTitle?: boolean;
+  /** Klasa modyfikująca <main> (np. dla stron z ciemnym hero). */
+  mainClass?: string;
+}
+
+const {
+  title,
+  description,
+  path,
+  ogImage,
+  ogImageAlt,
+  ogType,
+  noindex,
+  jsonLd = [],
+  bareTitle,
+  mainClass,
+} = Astro.props;
+
+// Globalne dane strukturalne obecne na każdej stronie.
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: `${site.name} — Rekolekcje ignacjańskie`,
+  url: site.url,
+  inLanguage: 'pl-PL',
+  description: site.description,
+  publisher: { '@type': 'Person', name: site.name },
+};
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  honorificPrefix: 'ks.',
+  jobTitle: 'Kapłan, rekolekcjonista, kierownik duchowy',
+  birthDate: '1962-03-30',
+  birthPlace: { '@type': 'Place', name: 'Ostrołęka, Polska' },
+  url: site.url,
+  image: new URL(site.defaultOgImage, site.url).href,
+  email: `mailto:${site.contact.email}`,
+  telephone: site.contact.phone,
+  knowsLanguage: ['Polish', 'Italian', 'Russian', 'English', 'Latin'],
+  sameAs: [site.social.youtube],
+};
+
+const allJsonLd = [websiteSchema, personSchema, ...jsonLd];
+---
+
+<!doctype html>
+<html lang="pl" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/* Zapobiega mignięciu złego motywu (FOUC) — ustawiane przed renderem body */}
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <Seo
+      title={title}
+      description={description}
+      path={path}
+      ogImage={ogImage}
+      ogImageAlt={ogImageAlt}
+      ogType={ogType}
+      noindex={noindex}
+      jsonLd={allJsonLd}
+      bareTitle={bareTitle}
+    />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icons/icon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+
+  <body>
+    <a href="#main" class="skip-link">Przejdź do treści</a>
+    <Header />
+    <main id="main" class={mainClass}>
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Przełącznik motywu jasny/ciemny z zapamiętaniem wyboru.
+      const root = document.documentElement;
+      const btn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+      const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+      const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+      const effective = () => root.getAttribute('data-theme') || (media.matches ? 'dark' : 'light');
+      const sync = () => {
+        const dark = effective() === 'dark';
+        btn?.setAttribute('aria-pressed', String(dark));
+        if (meta) meta.setAttribute('content', dark ? '#0f1c26' : '#faf8f3');
+      };
+
+      btn?.addEventListener('click', () => {
+        const next = effective() === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try {
+          localStorage.setItem('theme', next);
+        } catch (e) {}
+        sync();
+      });
+      media.addEventListener('change', sync);
+      sync();
+    </script>
+  </body>
+</html>

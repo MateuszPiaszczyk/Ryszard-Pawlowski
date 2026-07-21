@@ -1,0 +1,45 @@
+name: Deploy to GitHub Pages (opcjonalnie)
+
+# UWAGA: GitHub Pages to NIE jest klasyczny hosting FTP.
+# Ten workflow jest alternatywą do deploy.yml — używaj TYLKO jednego z nich.
+# Wymaga: Settings -> Pages -> Source = "GitHub Actions".
+# Wykonawca: Piaszczyk Studio (https://piaszczykstudio.pl/)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Pozwól na jedno współbieżne wdrożenie
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build & upload (Astro)
+        uses: withastro/action@v6
+        with:
+          node-version: 22
+          # path: .            # domyślnie root repo
+          # package-manager: npm@latest  # wykrywane automatycznie z package-lock.json
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

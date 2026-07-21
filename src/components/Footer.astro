@@ -1,0 +1,239 @@
+---
+import Icon from './Icon.astro';
+import { footerNav } from '../data/navigation';
+import { site } from '../data/site';
+
+const year = 2026;
+---
+
+<footer class="site-footer section--deep">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="44" height="44">
+          <rect width="64" height="64" rx="14" fill="#0f1c26"></rect>
+          <rect x="1.5" y="1.5" width="61" height="61" rx="12.5" fill="none" stroke="#d9b978" stroke-opacity="0.4"></rect>
+          <path
+            d="M32 13c4.6 6.2 9.4 10.9 9.4 18.2 0 6.1-4.2 10.6-9.4 10.6s-9.4-4.5-9.4-10.6c0-3.4 1.6-6 3.7-8.6 0 2.9 1.3 4.6 3 4.6 2 0 2.9-1.8 2.4-4.6-.6-3.3-1.4-6.2 .3-9.6z"
+            fill="#d9b978"></path>
+        </svg>
+      </span>
+      <p class="site-footer__lead">
+        „Ten Boga usłyszy, kto Go szuka w ciszy.”
+      </p>
+      <p class="site-footer__desc">
+        Rekolekcje ignacjańskie, medytacja Słowa Bożego i towarzyszenie duchowe
+        w drodze ku wewnętrznej ciszy.
+      </p>
+      <a class="site-footer__yt" href={site.social.youtube} target="_blank" rel="noopener">
+        <Icon name="youtube" /> Subskrybuj na YouTube
+      </a>
+    </div>
+
+    <nav class="site-footer__col" aria-label="Nawigacja w stopce">
+      <h2 class="site-footer__heading">Nawigacja</h2>
+      <ul role="list" class="site-footer__list">
+        {footerNav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__heading">Kontakt</h2>
+      <ul role="list" class="site-footer__list">
+        <li>
+          <a href={`mailto:${site.contact.email}`}>
+            <Icon name="mail" size="1.05em" /> {site.contact.email}
+          </a>
+        </li>
+        <li>
+          <a href={`tel:${site.contact.phoneHref}`}>
+            <Icon name="phone" size="1.05em" /> {site.contact.phone}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="site-footer__col site-footer__news">
+      <h2 class="site-footer__heading">Biuletyn</h2>
+      <p class="site-footer__desc">Zapisz się, aby otrzymywać rozważania i informacje o rekolekcjach.</p>
+      <form class="news-form" data-newsletter aria-label="Zapis do biuletynu" novalidate>
+        <label class="visually-hidden" for="footer-email">Twój adres e-mail</label>
+        <div class="news-form__row">
+          <input
+            id="footer-email"
+            type="email"
+            name="email"
+            required
+            autocomplete="email"
+            placeholder="Twój adres e-mail"
+            class="news-form__input"
+          />
+          <button type="submit" class="btn btn--sm news-form__btn">
+            Zapisz się
+          </button>
+        </div>
+        <p class="news-form__msg" data-newsletter-msg role="status" aria-live="polite"></p>
+      </form>
+      <p class="placeholder-note placeholder-note--footer">
+        <Icon name="info" size="1em" />
+        <span>Sekcja demonstracyjna — do podłączenia usługi mailingowej (np. MailerLite, Mailchimp, Brevo).</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="container site-footer__bottom">
+    <p class="site-footer__copy">
+      © {year} {site.legalName}. Wszelkie prawa zastrzeżone.
+    </p>
+    <p class="site-footer__credit">
+      Projekt i realizacja:
+      <a href={site.author.url} target="_blank" rel="noopener">
+        {site.author.name}
+        <Icon name="arrow-up-right" size="0.85em" />
+      </a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-deep);
+    color: var(--color-on-deep);
+    padding-top: var(--space-2xl);
+    margin-top: auto;
+  }
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-xl);
+    grid-template-columns: 1fr;
+    padding-bottom: var(--space-xl);
+  }
+  @media (min-width: 40rem) {
+    .site-footer__grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 64rem) {
+    .site-footer__grid {
+      grid-template-columns: 1.6fr 1fr 1fr 1.4fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .site-footer__brand .brand__mark { margin-bottom: var(--space-s); }
+  .site-footer__lead {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    line-height: 1.25;
+    color: #fff;
+    max-width: 22ch;
+  }
+  .site-footer__desc {
+    color: var(--color-on-deep-muted);
+    margin-top: var(--space-2xs);
+    font-size: var(--step--1);
+    max-width: 38ch;
+  }
+  .site-footer__yt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: var(--space-s);
+    color: var(--gold-300);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--step--1);
+  }
+  .site-footer__yt:hover { color: var(--gold-200); text-decoration: underline; }
+
+  .site-footer__heading {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--gold-300);
+    margin-bottom: var(--space-s);
+  }
+  .site-footer__list { display: flex; flex-direction: column; gap: 0.7rem; }
+  .site-footer__list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    color: var(--color-on-deep);
+    text-decoration: none;
+    font-size: var(--step--1);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .site-footer__list a:hover { color: var(--gold-300); }
+  .site-footer__list svg { color: var(--gold-300); flex: none; }
+
+  /* Formularz newsletter */
+  .news-form__row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: var(--space-2xs);
+  }
+  .news-form__input {
+    flex: 1 1 12rem;
+    min-width: 0;
+    padding: 0.7em 1em;
+    border-radius: var(--radius-pill);
+    border: 1px solid color-mix(in srgb, #fff 22%, transparent);
+    background: color-mix(in srgb, #fff 6%, transparent);
+    color: #fff;
+  }
+  .news-form__input::placeholder { color: var(--color-on-deep-muted); }
+  .news-form__input:focus-visible {
+    outline: 2px solid var(--gold-300);
+    outline-offset: 1px;
+    border-color: transparent;
+  }
+  .news-form__btn { flex: none; }
+  .news-form__msg { font-size: var(--step--2); margin-top: 0.5rem; min-height: 1.2em; color: var(--gold-200); }
+
+  .placeholder-note--footer {
+    margin-top: var(--space-s);
+    background: color-mix(in srgb, #fff 5%, transparent);
+    border-color: color-mix(in srgb, var(--gold-300) 35%, transparent);
+    color: var(--color-on-deep-muted);
+  }
+  .placeholder-note--footer svg { color: var(--gold-300); }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-l);
+    justify-content: space-between;
+    align-items: center;
+    padding-block: var(--space-m);
+    border-top: 1px solid color-mix(in srgb, #fff 12%, transparent);
+    font-size: var(--step--2);
+    color: var(--color-on-deep-muted);
+  }
+  .site-footer__credit a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    color: var(--gold-300);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .site-footer__credit a:hover { color: var(--gold-200); text-decoration: underline; }
+</style>
+
+<script>
+  // Demonstracyjna obsługa formularza biuletynu (bez wysyłki — do integracji).
+  const form = document.querySelector<HTMLFormElement>('[data-newsletter]');
+  const msg = document.querySelector<HTMLParagraphElement>('[data-newsletter-msg]');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = form.querySelector<HTMLInputElement>('input[type="email"]');
+    if (!input || !input.checkValidity()) {
+      input?.reportValidity();
+      return;
+    }
+    if (msg) msg.textContent = 'Dziękujemy! Zapis potwierdzimy po podłączeniu usługi mailingowej.';
+    form.reset();
+  });
+</script>

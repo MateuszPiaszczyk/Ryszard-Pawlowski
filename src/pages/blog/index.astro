@@ -1,0 +1,96 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+
+const posts = (
+  await getCollection('blog', ({ data }) => import.meta.env.PROD ? !data.draft : true)
+).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const fmt = (d: Date) =>
+  new Intl.DateTimeFormat('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://ryszardpawlowski.eu/' },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://ryszardpawlowski.eu/blog' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Blog"
+  description="Świadectwa, opinie i komentarze — refleksje o duchowości ignacjańskiej, medytacji Słowa Bożego i milczeniu."
+  path="/blog"
+  jsonLd={[breadcrumbSchema]}
+>
+  <PageHero
+    eyebrow="Świadectwa, opinie, komentarze"
+    title="Blog"
+    lead="Krótkie refleksje o duchowości ignacjańskiej, medytacji Słowa Bożego i wartości milczenia."
+    breadcrumbs={[{ label: 'Blog' }]}
+  />
+
+  <section class="section">
+    <div class="container">
+      {
+        posts.length === 0 ? (
+          <p class="text-muted">Wkrótce pojawią się tutaj pierwsze wpisy.</p>
+        ) : (
+          <ul role="list" class="post-list">
+            {posts.map((post) => (
+              <li>
+                <article class="post-card">
+                  <div class="post-card__meta">
+                    <span class="pill">{post.data.category}</span>
+                    <time datetime={post.data.pubDate.toISOString()}>{fmt(post.data.pubDate)}</time>
+                  </div>
+                  <h2 class="post-card__title">
+                    <a href={`/blog/${post.id}`}>{post.data.title}</a>
+                  </h2>
+                  <p class="post-card__desc">{post.data.description}</p>
+                  <a class="arrow-link" href={`/blog/${post.id}`} aria-label={`Czytaj wpis: ${post.data.title}`}>
+                    Czytaj dalej <Icon name="arrow-right" />
+                  </a>
+                </article>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-list { display: grid; gap: var(--space-l); grid-template-columns: 1fr; }
+  @media (min-width: 52rem) { .post-list { grid-template-columns: repeat(2, 1fr); } }
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    height: 100%;
+    padding: var(--space-l);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out);
+  }
+  .post-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .post-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+    font-size: var(--step--2);
+    color: var(--color-text-subtle);
+  }
+  .post-card__title { font-size: var(--step-2); margin-top: 0.2rem; }
+  .post-card__title a { text-decoration: none; color: var(--color-heading); }
+  .post-card__title a:hover { color: var(--color-primary-strong); }
+  .post-card__desc { color: var(--color-text-muted); flex: 1; }
+  .post-card .arrow-link { margin-top: var(--space-xs); }
+</style>

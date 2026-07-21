@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { linkGroups } from '../data/links';
+
+const hostname = (url: string) => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return url;
+  }
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://ryszardpawlowski.eu/' },
+    { '@type': 'ListItem', position: 2, name: 'Linki', item: 'https://ryszardpawlowski.eu/linki' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Linki"
+  description="Zbiór linków do stron wartych uwagi: Stolica Apostolska, Kościół w Polsce, duchowość ignacjańska, sanktuaria i wspólnoty."
+  path="/linki"
+  jsonLd={[breadcrumbSchema]}
+>
+  <PageHero
+    eyebrow="Warto zajrzeć"
+    title="Linki"
+    lead="Zbiór linków do stron wartych uwagi — źródła nauczania Kościoła, duchowości ignacjańskiej i modlitwy."
+    breadcrumbs={[{ label: 'Linki' }]}
+  />
+
+  <section class="section">
+    <div class="container flow-l">
+      {
+        linkGroups.map((group) => (
+          <div class="link-group">
+            <h2 class="link-group__heading">{group.heading}</h2>
+            <ul role="list" class="link-cards">
+              {
+                group.items.map((item) => (
+                  <li>
+                    <a href={item.href} class="link-card" target="_blank" rel="noopener">
+                      <span class="link-card__icon"><Icon name="link" /></span>
+                      <span class="link-card__body">
+                        <span class="link-card__title">{item.title}</span>
+                        <span class="link-card__desc">{item.description}</span>
+                        <span class="link-card__host">{hostname(item.href)} <Icon name="arrow-up-right" size="0.85em" /></span>
+                      </span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .link-group__heading {
+    font-size: var(--step-2);
+    padding-bottom: var(--space-s);
+    margin-bottom: var(--space-m);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .link-cards {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 40rem) { .link-cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 64rem) { .link-cards { grid-template-columns: repeat(3, 1fr); } }
+  .link-card {
+    display: flex;
+    gap: var(--space-s);
+    height: 100%;
+    padding: var(--space-m);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    text-decoration: none;
+    color: var(--color-text);
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out);
+  }
+  .link-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
+  }
+  .link-card__icon {
+    display: grid; place-items: center;
+    width: 2.75rem; height: 2.75rem;
+    border-radius: var(--radius-md);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-strong);
+    flex: none;
+  }
+  .link-card__body { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+  .link-card__title { font-family: var(--font-serif); font-size: var(--step-1); font-weight: 600; color: var(--color-heading); }
+  .link-card__desc { color: var(--color-text-muted); font-size: var(--step--1); flex: 1; }
+  .link-card__host {
+    display: inline-flex; align-items: center; gap: 0.3em;
+    color: var(--color-primary-strong);
+    font-size: var(--step--2);
+    font-weight: 600;
+    margin-top: 0.35rem;
+  }
+</style>

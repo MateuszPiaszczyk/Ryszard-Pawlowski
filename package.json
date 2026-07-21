@@ -1,0 +1,32 @@
+{
+  "name": "ryszardpawlowski-eu",
+  "version": "1.0.0",
+  "description": "Strona ks. Ryszarda Pawłowskiego — rekolekcje ignacjańskie. Nowoczesna, dostępna i zoptymalizowana pod SEO strona zbudowana w Astro.",
+  "type": "module",
+  "author": "Piaszczyk Studio (https://piaszczykstudio.pl)",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": ">=20.3.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "icons": "node scripts/generate-icons.mjs",
+    "prebuild": "node scripts/generate-icons.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@fontsource-variable/inter": "^5.1.0",
+    "@fontsource/cormorant-garamond": "^5.1.0",
+    "astro": "^5.2.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.7.3"
+  }
+}

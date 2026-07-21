@@ -1,0 +1,421 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Icon from '../components/Icon.astro';
+import { meditationMethod, retreatWeeks, examenSteps } from '../data/retreats';
+
+import ksiazki1 from '../assets/images/books/pozycje-4-6.jpg';
+import ksiazki2 from '../assets/images/books/pozycje-7-9.jpg';
+
+const toc = [
+  { href: '#o-rekolekcjach', label: 'O rekolekcjach' },
+  { href: '#metoda', label: 'Metoda medytacji' },
+  { href: '#tygodnie', label: 'Cztery tygodnie' },
+  { href: '#rachunek', label: 'Rachunek sumienia' },
+  { href: '#lektury', label: 'Polecane lektury' },
+  { href: '#zapisy', label: 'Zapisy' },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://ryszardpawlowski.eu/' },
+    { '@type': 'ListItem', position: 2, name: 'Rekolekcje ignacjańskie', item: 'https://ryszardpawlowski.eu/rekolekcje' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Rekolekcje ignacjańskie"
+  description="Ćwiczenia Duchowe św. Ignacego Loyoli: metoda medytacji Słowa Bożego, cztery tygodnie rekolekcji, ignacjański rachunek sumienia oraz polecane lektury."
+  path="/rekolekcje"
+  jsonLd={[breadcrumbSchema]}
+>
+  <PageHero
+    eyebrow="Ćwiczenia Duchowe św. Ignacego Loyoli"
+    title="Rekolekcje ignacjańskie"
+    lead="Ośmiodniowe Ćwiczenia Duchowe odprawiane z zaangażowaniem, otwartością i hojnością wobec Boga mogą stać się doskonałą szkołą życia wewnętrznego — dla kapłanów, osób zakonnych i świeckich."
+    breadcrumbs={[{ label: 'Rekolekcje ignacjańskie' }]}
+  />
+
+  <div class="reko">
+    <div class="container reko__layout">
+      {/* Spis treści */}
+      <aside class="reko__toc" aria-label="Spis treści strony">
+        <p class="reko__toc-title">Na tej stronie</p>
+        <nav>
+          <ul role="list">
+            {toc.map((t) => <li><a href={t.href}>{t.label}</a></li>)}
+          </ul>
+        </nav>
+        <a href="#zapisy" class="btn btn--sm reko__toc-cta">
+          <Icon name="calendar" size="1em" /> Zapisz się
+        </a>
+      </aside>
+
+      <div class="reko__content">
+        {/* O rekolekcjach */}
+        <section id="o-rekolekcjach" class="reko__section">
+          <p class="eyebrow">Wprowadzenie</p>
+          <h2>Czym są Ćwiczenia Duchowe</h2>
+          <div class="prose">
+            <p>
+              Ćwiczenia Duchowe, zwane rekolekcjami ignacjańskimi, składają się z
+              czterech etapów nazwanych przez św. Ignacego <strong>tygodniami</strong>.
+              Dający Ćwiczenia towarzyszy rekolektantom przez codzienną rozmowę, w
+              której dokonuje się refleksja nad przebiegiem modlitwy. Istotną rolę
+              odgrywa skupienie wewnętrzne i zgoda na całkowite milczenie.
+            </p>
+            <p>
+              Ćwiczenia prowadzą rekolektanta przez kolejne etapy życia duchowego:
+              <em> oczyszczenie, oświecenie i zjednoczenie</em>. Proponuje się
+              odprawianie poszczególnych tygodni w odstępach rocznych; istnieje też
+              możliwość odprawienia wszystkich tygodni w jednym ciągu (rekolekcje
+              30-dniowe) w specjalnych ośrodkach księży jezuitów.
+            </p>
+          </div>
+
+          <figure class="pullquote">
+            <Icon name="quote" size="1.6rem" />
+            <blockquote>
+              Milczenie daje nam czas potrzebny do wszystkiego, co dobre; wyzwala od
+              osądzania Boga i bliźnich; uczy, że nie wszystko da się wypowiedzieć —
+              i są sprawy, które zachowuje się w milczeniu.
+            </blockquote>
+          </figure>
+        </section>
+
+        {/* Metoda */}
+        <section id="metoda" class="reko__section">
+          <p class="eyebrow">Jak się modlić</p>
+          <h2>Metoda medytacji</h2>
+          <p class="lead">
+            Podstawą jest medytowanie Słowa Bożego — czytamy tekst wolniej,
+            zatrzymując się na słowach, aby wychwycić to, co dla nas najistotniejsze.
+          </p>
+          <div class="steps">
+            {
+              meditationMethod.map((m, i) => (
+                <article class="step card">
+                  <span class="step__num" aria-hidden="true">{i + 1}</span>
+                  <h3>{m.phase}</h3>
+                  {m.intro && <p class="step__intro">{m.intro}</p>}
+                  <ul role="list" class="step__points">
+                    {m.points.map((p) => (
+                      <li><Icon name="check" size="0.9em" /> <span>{p}</span></li>
+                    ))}
+                  </ul>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        {/* Cztery tygodnie */}
+        <section id="tygodnie" class="reko__section">
+          <p class="eyebrow">Etapy</p>
+          <h2>Cztery tygodnie rekolekcji</h2>
+          <p class="lead">
+            Osobom po Fundamencie proponuje się I Tydzień Ćwiczeń; osobom z większym
+            doświadczeniem odpowiednio II, III i IV Tydzień.
+          </p>
+          <div class="weeks-detailed">
+            {
+              retreatWeeks.map((w) => (
+                <article class="week-detail">
+                  <div class="week-detail__aside" aria-hidden="true">
+                    <span class="week-detail__roman">{w.roman}</span>
+                    <span class="week-detail__tag">Tydzień</span>
+                  </div>
+                  <div class="week-detail__body">
+                    <h3>{w.title}</h3>
+                    <p class="week-detail__summary">{w.summary}</p>
+                    <p>{w.body}</p>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </section>
+
+        {/* Rachunek sumienia */}
+        <section id="rachunek" class="reko__section">
+          <p class="eyebrow">Codzienna modlitwa</p>
+          <h2>Ignacjański rachunek sumienia</h2>
+          <div class="prose">
+            <p>
+              To patrzenie razem z Bogiem na miniony dzień — pomaga odkryć obecność
+              Boga i Jego błogosławieństwo w każdej chwili. Nie jest liczeniem grzechów,
+              lecz „kwadransem miłującej uwagi”. Składa się z pięciu punktów.
+            </p>
+          </div>
+          <ol role="list" class="examen">
+            {
+              examenSteps.map((s) => (
+                <li class="examen__item">
+                  <span class="examen__num">{s.n}</span>
+                  <div>
+                    <h3>{s.title}</h3>
+                    <p>{s.body}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+
+        {/* Lektury */}
+        <section id="lektury" class="reko__section">
+          <p class="eyebrow">Do przeczytania</p>
+          <h2>Polecane lektury</h2>
+          <p class="lead">Pozycje książkowe pomocne w przygotowaniu i przeżywaniu rekolekcji.</p>
+          <div class="books">
+            <Image src={ksiazki1} alt="Polecane pozycje książkowe — zestaw pierwszy" widths={[420, 720]} sizes="(min-width: 46rem) 45vw, 90vw" loading="lazy" class="books__img" />
+            <Image src={ksiazki2} alt="Polecane pozycje książkowe — zestaw drugi" widths={[420, 720]} sizes="(min-width: 46rem) 45vw, 90vw" loading="lazy" class="books__img" />
+          </div>
+        </section>
+
+        {/* Zapisy */}
+        <section id="zapisy" class="reko__section">
+          <p class="eyebrow">Terminy i zapisy</p>
+          <h2>Weź udział w rekolekcjach</h2>
+
+          <div class="signup-grid">
+            <div class="terms card">
+              <h3><Icon name="calendar" size="1.1em" /> Najbliższe terminy</h3>
+              <ul role="list" class="terms__list">
+                <li>
+                  <span class="terms__date">Termin do ustalenia</span>
+                  <span class="terms__name">I Tydzień Ćwiczeń — rekolekcje 8-dniowe</span>
+                </li>
+                <li>
+                  <span class="terms__date">Termin do ustalenia</span>
+                  <span class="terms__name">Rekolekcje w codzienności</span>
+                </li>
+              </ul>
+              <p class="placeholder-note">
+                <Icon name="info" size="1em" />
+                <span>Sekcja przykładowa — miejsce na aktualne terminy, lokalizację, koszt i liczbę miejsc (do uzupełnienia przez ks. Ryszarda).</span>
+              </p>
+            </div>
+
+            <div class="signup-form card">
+              <h3><Icon name="mail" size="1.1em" /> Zgłoś chęć udziału</h3>
+              <ContactForm subject="Zapis na rekolekcje ignacjańskie" compact />
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .reko { padding-block: var(--space-2xl); }
+  .reko__layout {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: start;
+  }
+  @media (min-width: 60rem) {
+    .reko__layout { grid-template-columns: 15rem 1fr; gap: var(--space-3xl); }
+  }
+
+  /* Spis treści */
+  .reko__toc { display: none; }
+  @media (min-width: 60rem) {
+    .reko__toc {
+      display: block;
+      position: sticky;
+      top: calc(var(--header-h) + 1.5rem);
+    }
+  }
+  .reko__toc-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-s);
+  }
+  .reko__toc ul { display: flex; flex-direction: column; gap: 0.15rem; }
+  .reko__toc a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-left: 2px solid var(--color-border);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: var(--step--1);
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+  .reko__toc a:hover,
+  .reko__toc a[aria-current='true'] {
+    color: var(--color-primary-strong);
+    border-left-color: var(--color-primary);
+    background: var(--color-primary-soft);
+  }
+  .reko__toc-cta { margin-top: var(--space-m); }
+
+  .reko__content { min-width: 0; }
+  .reko__section { padding-block: var(--space-xl); }
+  .reko__section:first-child { padding-top: 0; }
+  .reko__section + .reko__section { border-top: 1px solid var(--color-border); }
+  .reko__section > h2 { margin-top: var(--space-2xs); margin-bottom: var(--space-s); }
+
+  .pullquote {
+    display: grid;
+    gap: var(--space-xs);
+    margin-top: var(--space-l);
+    padding: var(--space-l);
+    border-radius: var(--radius-lg);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-strong);
+  }
+  .pullquote blockquote {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    line-height: 1.3;
+    font-style: italic;
+    color: var(--color-heading);
+  }
+
+  /* Metoda — steps */
+  .steps {
+    display: grid;
+    gap: var(--space-m);
+    margin-top: var(--space-l);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 52rem) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .step { position: relative; }
+  .step__num {
+    display: grid;
+    place-items: center;
+    width: 2.5rem; height: 2.5rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: var(--space-s);
+  }
+  .step h3 { font-size: var(--step-1); }
+  .step__intro { color: var(--color-text-muted); margin-top: 0.4rem; font-size: var(--step--1); }
+  .step__points { margin-top: var(--space-s); display: flex; flex-direction: column; gap: 0.5rem; }
+  .step__points li { display: flex; gap: 0.55rem; align-items: flex-start; font-size: var(--step--1); }
+  .step__points svg { color: var(--color-primary); margin-top: 0.25em; flex: none; }
+
+  /* Tygodnie */
+  .weeks-detailed { display: flex; flex-direction: column; gap: var(--space-m); margin-top: var(--space-l); }
+  .week-detail {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: 1fr;
+    padding: var(--space-l);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+  @media (min-width: 40rem) {
+    .week-detail { grid-template-columns: 6rem 1fr; gap: var(--space-l); }
+  }
+  .week-detail__aside {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  @media (min-width: 40rem) { .week-detail__aside { flex-direction: column; align-items: flex-start; } }
+  .week-detail__roman {
+    font-family: var(--font-serif);
+    font-size: 3.4rem;
+    line-height: 0.9;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+  .week-detail__tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--color-text-subtle); }
+  .week-detail__body h3 { font-size: var(--step-2); }
+  .week-detail__summary { color: var(--color-primary-strong); font-weight: 600; margin: 0.25rem 0 0.6rem; }
+  .week-detail__body p:last-child { color: var(--color-text-muted); line-height: var(--leading-relaxed); }
+
+  /* Rachunek sumienia */
+  .examen { display: flex; flex-direction: column; gap: var(--space-s); margin-top: var(--space-l); counter-reset: none; }
+  .examen__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-m);
+    align-items: start;
+    padding: var(--space-m) 0;
+    border-bottom: 1px dashed var(--color-border);
+  }
+  .examen__item:last-child { border-bottom: none; }
+  .examen__num {
+    display: grid;
+    place-items: center;
+    width: 2.75rem; height: 2.75rem;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary-strong);
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+  .examen__item h3 { font-size: var(--step-1); }
+  .examen__item p { color: var(--color-text-muted); margin-top: 0.3rem; }
+
+  /* Lektury */
+  .books { display: grid; gap: var(--space-m); grid-template-columns: 1fr; margin-top: var(--space-l); }
+  @media (min-width: 46rem) { .books { grid-template-columns: 1fr 1fr; } }
+  .books__img {
+    width: 100%;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Zapisy */
+  .signup-grid { display: grid; gap: var(--space-l); margin-top: var(--space-l); grid-template-columns: 1fr; }
+  @media (min-width: 60rem) { .signup-grid { grid-template-columns: 0.9fr 1.1fr; } }
+  .terms h3, .signup-form h3 {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: var(--step-1);
+    margin-bottom: var(--space-m);
+  }
+  .terms h3 svg, .signup-form h3 svg { color: var(--color-primary); }
+  .terms__list { display: flex; flex-direction: column; gap: var(--space-s); margin-bottom: var(--space-m); }
+  .terms__list li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding-bottom: var(--space-s);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .terms__date { font-weight: 600; color: var(--color-primary-strong); font-size: var(--step--1); }
+  .terms__name { color: var(--color-text-muted); }
+</style>
+
+<script>
+  // Podświetlanie aktywnej pozycji w spisie treści (scroll-spy).
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.reko__toc a'));
+  const map = new Map<string, HTMLAnchorElement>();
+  links.forEach((l) => {
+    const id = l.getAttribute('href')?.slice(1);
+    if (id) map.set(id, l);
+  });
+  const sections = Array.from(document.querySelectorAll('.reko__section'));
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          links.forEach((l) => l.removeAttribute('aria-current'));
+          map.get(e.target.id)?.setAttribute('aria-current', 'true');
+        }
+      });
+    },
+    { rootMargin: '-30% 0px -60% 0px' },
+  );
+  sections.forEach((s) => obs.observe(s));
+</script>

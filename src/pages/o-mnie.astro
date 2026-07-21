@@ -1,0 +1,207 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Gallery from '../components/Gallery.astro';
+import Icon from '../components/Icon.astro';
+import { bio, languages, interests, motto } from '../data/about';
+
+import portret from '../assets/images/hero/portret-og.jpg';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://ryszardpawlowski.eu/' },
+    { '@type': 'ListItem', position: 2, name: 'O mnie', item: 'https://ryszardpawlowski.eu/o-mnie' },
+  ],
+};
+---
+
+<BaseLayout
+  title="O mnie"
+  description="Ks. Ryszard Pawłowski — droga kapłańska, posługa w Polsce i we Włoszech, mariologia, rekolekcje ignacjańskie oraz galeria zdjęć."
+  path="/o-mnie"
+  ogType="profile"
+  jsonLd={[breadcrumbSchema]}
+>
+  <PageHero
+    eyebrow="Poznajmy się"
+    title="O mnie"
+    lead="Kapłan, rekolekcjonista i kierownik duchowy. Od lat towarzyszę ludziom w drodze wewnętrznej ciszy i medytacji Słowa Bożego."
+    breadcrumbs={[{ label: 'O mnie' }]}
+  />
+
+  {/* Intro z portretem */}
+  <section class="section">
+    <div class="container split">
+      <div class="about-portrait">
+        <Image
+          src={portret}
+          alt="Ks. Ryszard Pawłowski"
+          widths={[420, 640, 900]}
+          sizes="(min-width: 52rem) 42vw, 90vw"
+          loading="eager"
+          class="about-portrait__img"
+        />
+      </div>
+      <div class="flow">
+        <p class="eyebrow">Kim jestem</p>
+        <h2>Droga wiary i posługi</h2>
+        <p class="lead">
+          Urodzony w 1962 roku w Ostrołęce. Kapłan wyświęcony w 1989 roku, przez
+          ponad dwie dekady posługujący duszpastersko we Włoszech, dziś związany
+          z Sanktuarium św. Antoniego Padewskiego w Ostrołęce.
+        </p>
+        <p>
+          Licencjat teologii w zakresie mariologii, członek Polskiego Towarzystwa
+          Mariologicznego, kapelan Zakonu Rycerzy św. Jana Pawła II. Prowadzę
+          rekolekcje ignacjańskie i towarzyszę w rozeznawaniu drogi życia.
+        </p>
+        <ul role="list" class="lang-list">
+          {languages.map((l) => <li class="pill">{l}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {/* Oś biografii */}
+  <section class="section section--subtle">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Kalendarium</p>
+        <h2>Najważniejsze etapy</h2>
+      </div>
+      <ol role="list" class="timeline">
+        {
+          bio.map((entry) => (
+            <li class="timeline__item">
+              <div class="timeline__marker" aria-hidden="true">
+                <span>{entry.marker}</span>
+              </div>
+              <div class="timeline__body card">
+                <h3 class="timeline__heading">{entry.heading}</h3>
+                <ul role="list" class="timeline__lines">
+                  {entry.lines.map((line) => <li>{line}</li>)}
+                </ul>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  {/* Motto + zainteresowania */}
+  <section class="section">
+    <div class="container grid-2 about-two">
+      <figure class="motto card">
+        <Icon name="quote" size="2rem" class="motto__icon" />
+        <blockquote>{motto.text}</blockquote>
+        <figcaption>— {motto.author}</figcaption>
+      </figure>
+      <div class="flow">
+        <p class="eyebrow">Poza posługą</p>
+        <h2>Zainteresowania</h2>
+        <ul role="list" class="tag-cloud">
+          {interests.map((it) => <li><Icon name="check" size="0.9em" /> {it}</li>)}
+        </ul>
+        <p class="text-muted">
+          W czasie pobytu we Włoszech kilkakrotnie współprowadziłem letnie obozy
+          skautowe — m.in. w Dolinie Valtelliny oraz w regionie Abruzji.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* Galeria */}
+  <section id="galeria" class="section section--subtle">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Galeria</p>
+        <h2>Zdjęcia z różnych wydarzeń</h2>
+        <p class="lead">Migawki z posługi kapłańskiej, pielgrzymek i spotkań. Kliknij zdjęcie, aby powiększyć.</p>
+      </div>
+      <Gallery />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-portrait__img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    max-height: 34rem;
+    object-fit: cover;
+    object-position: top;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+  .lang-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: var(--space-s); }
+
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: var(--space-m); position: relative; }
+  .timeline__item {
+    display: grid;
+    gap: var(--space-s);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 46rem) {
+    .timeline__item { grid-template-columns: 9rem 1fr; gap: var(--space-l); align-items: start; }
+  }
+  .timeline__marker {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .timeline__marker span {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: var(--step-1);
+    color: var(--color-primary);
+    white-space: nowrap;
+  }
+  @media (min-width: 46rem) {
+    .timeline__marker {
+      justify-content: flex-end;
+      position: sticky;
+      top: calc(var(--header-h) + 1rem);
+    }
+  }
+  .timeline__heading { font-size: var(--step-1); }
+  .timeline__lines { margin-top: var(--space-2xs); display: flex; flex-direction: column; gap: 0.5rem; color: var(--color-text-muted); }
+  .timeline__lines li { padding-left: 1.1rem; position: relative; }
+  .timeline__lines li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0.65em;
+    width: 0.4rem; height: 0.4rem;
+    border-radius: 50%;
+    background: var(--color-primary);
+  }
+
+  .about-two { align-items: start; gap: var(--space-2xl); }
+  .motto { position: relative; background: var(--color-deep); color: #fff; }
+  .motto__icon { color: var(--gold-300); }
+  .motto blockquote {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    line-height: 1.3;
+    font-style: italic;
+    margin-top: var(--space-xs);
+  }
+  .motto figcaption { margin-top: var(--space-s); color: var(--color-on-deep-muted); }
+
+  .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: var(--space-s); }
+  .tag-cloud li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.45em 0.9em;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border-strong);
+    font-size: var(--step--1);
+    color: var(--color-text);
+  }
+  .tag-cloud svg { color: var(--color-primary); }
+</style>
