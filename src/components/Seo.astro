@@ -4,6 +4,7 @@
  * oraz dane strukturalne JSON-LD (schema.org).
  */
 import { site } from '../data/site';
+import { absoluteUrl } from '../utils/base';
 
 interface Props {
   title: string;
@@ -32,9 +33,11 @@ const {
   bareTitle = false,
 } = Astro.props;
 
-const base = Astro.site ?? new URL(site.url);
-const canonical = new URL(path, base).href.replace(/\/$/, '') || site.url;
-const ogImageUrl = new URL(ogImage, base).href;
+// Canonical i OG budujemy przez absoluteUrl (origin z pola `site` + adres bazowy).
+// `path` może być czysty (np. "/o-mnie") albo już z bazą (domyślnie z Astro.url) —
+// absoluteUrl normalizuje oba przypadki.
+const canonical = absoluteUrl(path).replace(/\/$/, '') || absoluteUrl('/');
+const ogImageUrl = /^https?:\/\//.test(ogImage) ? ogImage : absoluteUrl(ogImage);
 const fullTitle = bareTitle ? title : `${title} — ${site.name}`;
 ---
 

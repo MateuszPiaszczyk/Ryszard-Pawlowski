@@ -6,6 +6,7 @@ import Gallery from '../components/Gallery.astro';
 import { quotes, biblicalNumbers } from '../data/home';
 import { retreatWeeks } from '../data/retreats';
 import { site } from '../data/site';
+import { withBase } from '../utils/base';
 
 import portrait from '../assets/images/hero/rp23.jpg';
 import medytacja from '../assets/images/content/medytacja.png';
@@ -31,10 +32,10 @@ import zakon from '../assets/images/content/3ks.jpg';
           prowadzona przez <strong>ks. Ryszarda Pawłowskiego</strong>.
         </p>
         <div class="hero__cta cluster">
-          <a href="/rekolekcje" class="btn">
+          <a href={withBase('/rekolekcje')} class="btn">
             Poznaj rekolekcje <Icon name="arrow-right" class="btn__icon" />
           </a>
-          <a href="/kontakt" class="btn btn--ghost">Skontaktuj się</a>
+          <a href={withBase('/kontakt')} class="btn btn--ghost">Skontaktuj się</a>
         </div>
         <dl class="hero__facts">
           <div>
@@ -175,7 +176,7 @@ import zakon from '../assets/images/content/3ks.jpg';
         }
       </ol>
       <div class="center" style="margin-top: var(--space-xl)">
-        <a href="/rekolekcje" class="btn">
+        <a href={withBase('/rekolekcje')} class="btn">
           Metoda i etapy rekolekcji <Icon name="arrow-right" class="btn__icon" />
         </a>
       </div>
@@ -208,7 +209,7 @@ import zakon from '../assets/images/content/3ks.jpg';
           Ks. Ryszard Pawłowski od 2020 roku pełni posługę kapelana i opiekuna
           duchowego Zakonu.
         </p>
-        <a href="/o-mnie" class="arrow-link">Poznaj drogę kapłańską <Icon name="arrow-right" /></a>
+        <a href={withBase('/o-mnie')} class="arrow-link">Poznaj drogę kapłańską <Icon name="arrow-right" /></a>
       </div>
     </div>
   </section>
@@ -221,7 +222,7 @@ import zakon from '../assets/images/content/3ks.jpg';
           <p class="eyebrow">Migawki</p>
           <h2>Z posługi i pielgrzymek</h2>
         </div>
-        <a href="/o-mnie#galeria" class="arrow-link">Zobacz pełną galerię <Icon name="arrow-right" /></a>
+        <a href={withBase('/o-mnie#galeria')} class="arrow-link">Zobacz pełną galerię <Icon name="arrow-right" /></a>
       </div>
       <Gallery limit={8} />
     </div>
@@ -235,7 +236,7 @@ import zakon from '../assets/images/content/3ks.jpg';
         <p>Chętnie porozmawiam i pomogę wybrać odpowiedni etap Ćwiczeń Duchowych.</p>
       </div>
       <div class="cluster">
-        <a href="/kontakt" class="btn">Napisz do mnie</a>
+        <a href={withBase('/kontakt')} class="btn">Napisz do mnie</a>
         <a href={`tel:${site.contact.phoneHref}`} class="btn btn--on-deep">
           <Icon name="phone" class="btn__icon" /> {site.contact.phone}
         </a>

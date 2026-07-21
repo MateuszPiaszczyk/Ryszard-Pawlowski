@@ -5,6 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import Icon from '../../components/Icon.astro';
 import { site } from '../../data/site';
+import { withBase, absoluteUrl } from '../../utils/base';
 
 export const getStaticPaths = (async () => {
   const posts = await getCollection('blog');
@@ -20,7 +21,7 @@ const { Content } = await render(post);
 const fmt = (d: Date) =>
   new Intl.DateTimeFormat('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
 
-const url = `${site.url}/blog/${post.id}`;
+const url = absoluteUrl(`/blog/${post.id}`);
 
 const articleSchema = {
   '@context': 'https://schema.org',
@@ -33,15 +34,15 @@ const articleSchema = {
   publisher: { '@type': 'Person', name: site.name },
   mainEntityOfPage: url,
   inLanguage: 'pl-PL',
-  image: new URL(site.defaultOgImage, site.url).href,
+  image: absoluteUrl(site.defaultOgImage),
 };
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Start', item: `${site.url}/` },
-    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site.url}/blog` },
+    { '@type': 'ListItem', position: 1, name: 'Start', item: absoluteUrl('/') },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: absoluteUrl('/blog') },
     { '@type': 'ListItem', position: 3, name: post.data.title, item: url },
   ],
 };
@@ -79,7 +80,7 @@ const breadcrumbSchema = {
           </ul>
         )
       }
-      <a href="/blog" class="arrow-link back">
+      <a href={withBase('/blog')} class="arrow-link back">
         <Icon name="arrow-right" class="flip" /> Wróć do bloga
       </a>
     </div>

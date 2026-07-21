@@ -2,6 +2,7 @@
 import Icon from './Icon.astro';
 import { footerNav } from '../data/navigation';
 import { site } from '../data/site';
+import { withBase } from '../utils/base';
 
 const year = 2026;
 ---
@@ -34,7 +35,7 @@ const year = 2026;
       <h2 class="site-footer__heading">Nawigacja</h2>
       <ul role="list" class="site-footer__list">
         {footerNav.map((item) => (
-          <li><a href={item.href}>{item.label}</a></li>
+          <li><a href={withBase(item.href)}>{item.label}</a></li>
         ))}
       </ul>
     </nav>

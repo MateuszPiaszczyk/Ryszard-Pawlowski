@@ -2,17 +2,24 @@
 import Icon from './Icon.astro';
 import { mainNav } from '../data/navigation';
 import { site } from '../data/site';
+import { withBase } from '../utils/base';
 
-const pathname = new URL(Astro.request.url).pathname.replace(/\/$/, '') || '/';
+// Porównujemy ścieżki z uwzględnieniem bazy: bieżący pathname zawiera bazę
+// (np. /Ryszard-Pawlowski/o-mnie), więc href-y też przepuszczamy przez withBase.
+const norm = (p: string) => p.replace(/\/+$/, '') || '/';
+const pathname = norm(new URL(Astro.request.url).pathname);
+const rootPath = norm(withBase('/'));
 const isActive = (href: string) => {
-  const clean = href.replace(/\/$/, '') || '/';
-  return clean === '/' ? pathname === '/' : pathname === clean || pathname.startsWith(clean + '/');
+  const target = norm(withBase(href));
+  return target === rootPath
+    ? pathname === rootPath
+    : pathname === target || pathname.startsWith(target + '/');
 };
 ---
 
 <header class="site-header" data-site-header>
   <div class="container site-header__inner">
-    <a href="/" class="brand" aria-label={`${site.name} — strona główna`}>
+    <a href={withBase('/')} class="brand" aria-label={`${site.name} — strona główna`}>
       <span class="brand__mark" aria-hidden="true">
         <svg viewBox="0 0 64 64" width="40" height="40">
           <rect width="64" height="64" rx="14" fill="#12202c"></rect>
@@ -33,7 +40,7 @@ const isActive = (href: string) => {
           mainNav.map((item) => (
             <li>
               <a
-                href={item.href}
+                href={withBase(item.href)}
                 class="nav-link"
                 aria-current={isActive(item.href) ? 'page' : undefined}
               >
@@ -79,7 +86,7 @@ const isActive = (href: string) => {
                 mainNav.map((item) => (
                   <li>
                     <a
-                      href={item.href}
+                      href={withBase(item.href)}
                       class="nav-mobile__link"
                       aria-current={isActive(item.href) ? 'page' : undefined}
                     >

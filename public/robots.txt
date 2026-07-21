@@ -2,6 +2,8 @@ User-agent: *
 Allow: /
 
 # Zasoby techniczne nie muszą być indeksowane osobno
-Disallow: /_astro/
+Disallow: /Ryszard-Pawlowski/_astro/
 
-Sitemap: https://ryszardpawlowski.eu/sitemap-index.xml
+# UWAGA: plik statyczny — adres nie jest doklejany automatycznie.
+# Po zmianie domeny/bazy zaktualizuj poniższy URL ręcznie.
+Sitemap: https://mateuszpiaszczyk.github.io/Ryszard-Pawlowski/sitemap-index.xml

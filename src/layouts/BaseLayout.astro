@@ -10,6 +10,7 @@ import Seo from '../components/Seo.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../data/site';
+import { withBase, absoluteUrl } from '../utils/base';
 
 interface Props {
   title: string;
@@ -43,7 +44,7 @@ const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: `${site.name} — Rekolekcje ignacjańskie`,
-  url: site.url,
+  url: absoluteUrl('/'),
   inLanguage: 'pl-PL',
   description: site.description,
   publisher: { '@type': 'Person', name: site.name },
@@ -57,8 +58,8 @@ const personSchema = {
   jobTitle: 'Kapłan, rekolekcjonista, kierownik duchowy',
   birthDate: '1962-03-30',
   birthPlace: { '@type': 'Place', name: 'Ostrołęka, Polska' },
-  url: site.url,
-  image: new URL(site.defaultOgImage, site.url).href,
+  url: absoluteUrl('/'),
+  image: absoluteUrl(site.defaultOgImage),
   email: `mailto:${site.contact.email}`,
   telephone: site.contact.phone,
   knowsLanguage: ['Polish', 'Italian', 'Russian', 'English', 'Latin'],
@@ -98,11 +99,11 @@ const allJsonLd = [websiteSchema, personSchema, ...jsonLd];
       bareTitle={bareTitle}
     />
 
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/icons/icon-32.png" sizes="32x32" type="image/png" />
-    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={withBase('/icons/icon-32.png')} sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href={withBase('/icons/apple-touch-icon.png')} />
+    <link rel="manifest" href={withBase('/site.webmanifest')} />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
 
     <meta name="format-detection" content="telephone=no" />
     <meta name="generator" content={Astro.generator} />

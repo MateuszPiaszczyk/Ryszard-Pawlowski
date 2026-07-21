@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import { withBase } from '../utils/base';
 
 interface Crumb {
   label: string;
@@ -15,14 +16,14 @@ const { items, onDeep = false } = Astro.props;
 <nav class:list={['breadcrumbs', { 'breadcrumbs--deep': onDeep }]} aria-label="Ścieżka nawigacji">
   <ol role="list">
     <li>
-      <a href="/">Start</a>
+      <a href={withBase('/')}>Start</a>
     </li>
     {
       items.map((item, i) => (
         <li>
           <Icon name="chevron-down" size="0.85em" class="breadcrumbs__sep" />
           {item.href && i < items.length - 1 ? (
-            <a href={item.href}>{item.label}</a>
+            <a href={withBase(item.href)}>{item.label}</a>
           ) : (
             <span aria-current="page">{item.label}</span>
           )}

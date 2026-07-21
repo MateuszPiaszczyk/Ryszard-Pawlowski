@@ -5,6 +5,7 @@ import PageHero from '../components/PageHero.astro';
 import Gallery from '../components/Gallery.astro';
 import Icon from '../components/Icon.astro';
 import { bio, languages, interests, motto } from '../data/about';
+import { absoluteUrl } from '../utils/base';
 
 import portret from '../assets/images/hero/portret-og.jpg';
 
@@ -12,8 +13,8 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://ryszardpawlowski.eu/' },
-    { '@type': 'ListItem', position: 2, name: 'O mnie', item: 'https://ryszardpawlowski.eu/o-mnie' },
+    { '@type': 'ListItem', position: 1, name: 'Start', item: absoluteUrl('/') },
+    { '@type': 'ListItem', position: 2, name: 'O mnie', item: absoluteUrl('/o-mnie') },
   ],
 };
 ---

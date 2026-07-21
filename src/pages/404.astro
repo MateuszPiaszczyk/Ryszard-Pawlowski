@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import { mainNav } from '../data/navigation';
+import { withBase } from '../utils/base';
 ---
 
 <BaseLayout title="Nie znaleziono strony" description="Strona o podanym adresie nie istnieje." noindex>
@@ -14,12 +15,12 @@ import { mainNav } from '../data/navigation';
         jedno z poniższych miejsc.
       </p>
       <div class="cluster cluster--center" style="margin-top: var(--space-l)">
-        <a href="/" class="btn"><Icon name="arrow-right" class="btn__icon" /> Wróć na stronę główną</a>
+        <a href={withBase('/')} class="btn"><Icon name="arrow-right" class="btn__icon" /> Wróć na stronę główną</a>
       </div>
       <nav aria-label="Szybkie odnośniki" class="notfound__links">
         <ul role="list" class="cluster cluster--center">
           {mainNav.filter((i) => i.href !== '/').map((i) => (
-            <li><a href={i.href}>{i.label}</a></li>
+            <li><a href={withBase(i.href)}>{i.label}</a></li>
           ))}
         </ul>
       </nav>
